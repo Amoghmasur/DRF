@@ -10,7 +10,8 @@ from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework import viewsets
 from django.shortcuts import get_object_or_404
-
+from watchlist_app.api.permissions import AdminOrReadOnly
+from rest_framework.permissions import IsAuthenticated,IsAuthenticatedOrReadOnly
 
 
 class ReviewCreate(generics.CreateAPIView):
@@ -28,6 +29,7 @@ class ReviewCreate(generics.CreateAPIView):
 class ReviewList(generics.ListAPIView):
     # queryset=Review.objects.all()
     serializer_class=ReviewSerializer
+    permission_classes=[IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         pk=self.kwargs['pk']
@@ -38,6 +40,7 @@ class ReviewList(generics.ListAPIView):
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset=Review.objects.all()
     serializer_class=ReviewSerializer
+    permission_classes=[AdminOrReadOnly]
 
 
 # class ReviewList(mixins.ListModelMixin,
@@ -160,12 +163,6 @@ class WatchDetailAV(APIView):
         movie=WatchList.objects.get(pk=pk)
         movie.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-
-
-
-
 
 
 
